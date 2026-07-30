@@ -26,7 +26,7 @@ Regression analysis of the classic Auto MPG dataset (car models collected at a U
 
 **Pairwise relationships between quantitative features**
 
-![Pairplot of quantitative features](pairplot_quantitative.png)
+![Pairplot of quantitative features](pairplot_quantative.png)
 
 **Fuel efficiency by car origin**
 
