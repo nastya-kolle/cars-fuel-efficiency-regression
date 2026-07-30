@@ -1,6 +1,6 @@
 # Auto MPG Regression — Predicting Fuel Efficiency
 
-Regression analysis of the classic Auto MPG dataset (car models collected at a US university in 1983): data cleaning, exploratory analysis, and comparison of multiple regression approaches — linear, non-linear (linearized via log transform), polynomial, and decision tree — to predict a car's fuel efficiency (`mpg`).
+Regression analysis of the classic Auto MPG dataset (car models collected at a US university in 1983): data cleaning, exploratory analysis, and comparison of multiple regression approaches — linear, non-linear (linearized via log transform), polynomial (with Ridge/Lasso regularization), and decision tree — to predict a car's fuel efficiency (`mpg`).
 
 ## About the project
 
@@ -11,12 +11,14 @@ Regression analysis of the classic Auto MPG dataset (car models collected at a U
 - Distribution analysis of quantitative features (histograms, pairplot, Shapiro–Wilk normality test)
 - Analysis of categorical features' influence on `mpg` (boxplots by `origin`, `model year`, `cylinders`; Kruskal–Wallis test)
 - Correlation analysis between quantitative features (Pearson correlation, heatmap)
-- Linear and log-linearized (power-law) regression models with `statsmodels` (OLS), including multi-factor models
-- Train/test split and comparison of five model families: **Linear Regression**, **Non-linear (log-linearized) Regression**, **Polynomial Regression**, and **Decision Tree Regression** — each with a reduced and a full feature set
-- Model comparison by R² (train/test) and MSE (train/test), plus a sample forecast for a new car
+- Linear and log-linearized (power-law) regression models, with preprocessing handled via `scikit-learn` `Pipeline` / `ColumnTransformer` (`StandardScaler` + `OneHotEncoder`), each with a reduced and a full feature set
+- Polynomial regression (degree 3), reduced and full feature sets, built as an end-to-end `Pipeline`
+- **Ridge and Lasso regularization** applied on top of the same standardized polynomial features used by the full polynomial model, to address its overfitting
+- **Decision Tree Regression**, reduced and full feature sets, with tree visualization and a sample forecast
+- Model comparison by R² (train/test) and MSE (train/test) across all 8 models, plus a sample forecast for a new car
 - Final conclusion on the best-performing model
 
-**Key finding:** the log-linearized non-linear regression and the full polynomial/decision tree models showed the best R² and MSE on both train and test sets, with the non-linear (log-linearized) model recommended for further use.
+**Key finding:** the full polynomial model overfits noticeably (high R² on train, much lower on test). Applying Ridge/Lasso regularization to the same polynomial features closes most of that gap and improves test R², confirming that regularization meaningfully improves generalization here. The log-linearized non-linear regression and the full decision tree also perform strongly. Exact metric values depend on the dataset used — re-running the notebook on your own `auto-mpg.csv` will reproduce the full comparison table.
 
 ## Example visualizations
 
@@ -55,8 +57,9 @@ Regression analysis of the classic Auto MPG dataset (car models collected at a U
 ## Repository structure
 
 ```
-├── Cars_Regression.ipynb   # main analysis notebook
-├── *.png                   # charts used in the README
+├── Cars_Regression_final.ipynb   # main analysis notebook
+├── auto-mpg.csv                  # dataset (add this — see "How to run")
+├── *.png                         # charts used in the README
 └── README.md
 ```
 
@@ -67,7 +70,7 @@ Regression analysis of the classic Auto MPG dataset (car models collected at a U
 ## How to run
 
 1. Clone the repository
-2. Place the `auto-mpg.csv` dataset in the project folder
-3. Open `Cars_Regression.ipynb` in Jupyter Notebook / Google Colab
+2. Place the `auto-mpg.csv` dataset in the project folder (not included — see note below)
+3. Open `Cars_Regression_final.ipynb` in Jupyter Notebook / Google Colab
 4. Install dependencies: `pip install pandas numpy matplotlib seaborn scipy statsmodels scikit-learn`
 5. Run the cells in order
